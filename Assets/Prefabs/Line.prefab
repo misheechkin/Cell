@@ -49,6 +49,7 @@ MonoBehaviour:
   _lineRenderer: {fileID: 1520961443736109888}
   _collider: {fileID: 2557296279801073932}
   scaleCollider: 0.1
+  _points: []
 --- !u!120 &1520961443736109888
 LineRenderer:
   serializedVersion: 2
@@ -140,8 +141,8 @@ LineRenderer:
       m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 5
-    numCapVertices: 5
+    numCornerVertices: 0
+    numCapVertices: 0
     alignment: 0
     textureMode: 0
     textureScale: {x: 1, y: 1}
