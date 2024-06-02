@@ -15,20 +15,31 @@ public class Line : MonoBehaviour
     [SerializeField] 
     private float scaleCollider = 0.2f;
 
-    private readonly List<Vector2> _points = new List<Vector2>();
-
-    private float x;
-
+    public  List<Vector2> _points = new List<Vector2>();
+    private EdgeCollider2D EdgeCollider2D;
+ 
+    public void SetCreate()
+    {
+        EdgeCollider2D.isTrigger = false;
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Ball ball = collision.GetComponent<Ball>();
+        if (collision != null && ball != null)
+        {
+            Destroy(gameObject);
+        }
+    }
     private void Start()
     {
         _collider.transform.position -= transform.position;
+        EdgeCollider2D = this.GetComponent<EdgeCollider2D>();
+        EdgeCollider2D.isTrigger = true;
     }
 
     public void SetPosition(Vector2 position)
     {
-        if(_lineRenderer.positionCount==0)
-            x = position.x;
-        position.x = x;
+        
         if(!CanAppend(position)) return;
         _points.Add(position);
         _lineRenderer.positionCount++;
@@ -36,7 +47,7 @@ public class Line : MonoBehaviour
         _collider.points = _points.ToArray();
         _collider.edgeRadius = scaleCollider;
     }
-
+ 
 
     private bool CanAppend(Vector2 position)
     {

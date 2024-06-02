@@ -12,9 +12,10 @@ public class DrawManager : MonoBehaviour
     [SerializeField] 
     private Line _linePrefab;
     
-    public const float Resolution = 1f;
+    public const float Resolution = 0.1f;
 
     private Line _currentLine;
+    
 
     private void Start()
     {
@@ -26,8 +27,8 @@ public class DrawManager : MonoBehaviour
         Vector2 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(0))
             _currentLine = Instantiate(_linePrefab, mousePos, Quaternion.identity);
-        if(Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) )
             _currentLine.SetPosition(mousePos);
-    }       
-    
+
+    }
 }
