@@ -7,14 +7,14 @@ public class GameManager : MonoBehaviour
 {
    public void StartGameEasy()
    {
-      Spawner.CountBalls = 1;
+      Spawner.CountBalls = 2;
    }
    public void StartGameHard()
    {
-      Spawner.CountBalls = 20;
+      Spawner.CountBalls = 4;
    }
    public void StartGameNormal()
    {
-      Spawner.CountBalls = 30;
+      Spawner.CountBalls = 5;
    }
 }

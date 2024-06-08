@@ -1,11 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
-using MouseButton = Unity.VisualScripting.MouseButton;
+
 
 public class DrawManager : MonoBehaviour
 {
@@ -13,17 +9,18 @@ public class DrawManager : MonoBehaviour
     
     [SerializeField] 
     private Line _linePrefab;
-    public const float Resolution = 0.01f;
+    public const float Resolution = 0.1f;
     private Line _currentLine;
-    private Vector2 tempPosition;
-    private bool temp;
-    private bool ver;
-
+    private Vector2 _tempPosition;
+    private bool _temp;
+    private bool _ver;
+    private List<Line> _listLine;
     private void Start()
     {
-        temp = true;
-        ver = true;
+        _temp = true;
+        _ver = true;
         _camera = Camera.main;
+        _listLine = new List<Line>();
     }
 
     private void Update()
@@ -31,60 +28,99 @@ public class DrawManager : MonoBehaviour
         Vector2 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(0))
         {
-            if (temp)
+            if (_temp)
             {
                 _currentLine = Instantiate(_linePrefab, mousePos, Quaternion.identity);
                 _currentLine.SetPosition(mousePos);
-                tempPosition = mousePos;
+                _tempPosition = mousePos;
                 
-                temp = false;
+                _temp = false;
             }
            
         }
-      
-        if (Input.GetMouseButton(0))
+
+        if (_currentLine == null)
         {
-            if (ver)
+            _temp = true;
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            _ver = !_ver;
+        }  
+        
+        if (Input.GetMouseButton(0)&& _currentLine!=null)
+        {
+            if (_ver)
             {
-                if (Math.Abs( mousePos.x - tempPosition.x)<1)
+                if (Math.Abs( mousePos.x - _tempPosition.x)<1)
                 {
-                    mousePos.x = tempPosition.x;
+                    mousePos.x = _tempPosition.x;
                     _currentLine.SetPosition(mousePos);
-                    tempPosition.y = _currentLine._lineRenderer.GetPosition(_currentLine._lineRenderer.positionCount-1).y;
+                    _tempPosition.y = _currentLine._lineRenderer.GetPosition(_currentLine._lineRenderer.positionCount-1).y;
                 }
             
             }
             else
             {
-                if (Math.Abs( mousePos.y - tempPosition.y)<1)
+                if (Math.Abs( mousePos.y - _tempPosition.y)<1)
                 {
-                    mousePos.y = tempPosition.y;
+                    mousePos.y = _tempPosition.y;
                     _currentLine.SetPosition(mousePos);
-                    tempPosition.x = _currentLine._lineRenderer.GetPosition(_currentLine._lineRenderer.positionCount-1).x;
+                    _tempPosition.x = _currentLine._lineRenderer.GetPosition(_currentLine._lineRenderer.positionCount-1).x;
 
                 }
               
             }
             
         }
-        
-        if (Input.GetMouseButtonUp(0))
-        {
-            ver = !ver;
-            if (!temp)
-            {
-                Vector2 vector2 = _currentLine._lineRenderer.GetPosition(0);
-                if (Vector2.Distance(vector2,mousePos)<0.4f)
-                {
-                    temp = true;
-                }
-            }
-          
-          
-        }
 
-       
-        
+        if (Input.GetKey(KeyCode.Escape) )
+        {
+            Destroy(_currentLine.gameObject);
+        }
+        if (Input.GetMouseButtonUp(0) && _currentLine!=null)
+        {
+            if (!_temp)
+            {
+                if (Vector2.Distance(mousePos, _currentLine._lineRenderer.GetPosition(0)) < 0.3f)
+                {
+                    _temp = true;
+                    _currentLine.SetCreate();
+                    _listLine.Add(_currentLine);
+                }
+
+                else if (_listLine.Count != 0)
+                {
+                    foreach (var line in _listLine)
+                    {
+                        for (int i = 0; i < line._lineRenderer.positionCount; i++)
+                        {
+                            if (Vector3.Distance(_currentLine._lineRenderer.GetPosition(0),line._lineRenderer.GetPosition(i))<0.15f)
+                            {
+                                for (int j = 0; j < line._lineRenderer.positionCount; j++)
+                                {
+                                    if (Vector2.Distance(mousePos, line._lineRenderer.GetPosition(j)) < 0.15f)
+                                    {
+                                        _temp = true;
+                                        _currentLine.SetCreate();
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                        
+                    }
+                  
+                }
+                  
+            }
+        }
+          
+          
         
     }
+    
+        
 }
+

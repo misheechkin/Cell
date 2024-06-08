@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using Random = System.Random;
+using Random = UnityEngine.Random;
+
 
 public class Ball : MonoBehaviour
 {
     public float speed=1f;
     private Rigidbody2D rb;
-    private Vector2 vector;
+    public Vector2 vector;
     private Vector2 lastvelocity;
     private int _countRays=360;
     private float Timeleft = 3f;
@@ -20,12 +21,12 @@ public class Ball : MonoBehaviour
     {
         count++;
         rb = GetComponent<Rigidbody2D>();
-        Random rd = new Random();
-        var tuple = (0, 0);
+       
+        var tuple = (0f, 0f);
         while (tuple.Item1==0 && tuple.Item2==0)
-        {
-            tuple.Item1 = rd.Next(-1, 1);
-            tuple.Item2 = rd.Next(-1, 1);
+        {  
+            tuple.Item1 = Random.Range(-1f,1f);
+            tuple.Item2 = Random.Range(-1f,1f);
         }
         vector = new Vector2(tuple.Item1, tuple.Item2);
     }

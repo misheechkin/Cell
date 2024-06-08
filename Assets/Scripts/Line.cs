@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -17,24 +18,27 @@ public class Line : MonoBehaviour
 
     public  List<Vector2> _points = new List<Vector2>();
     private EdgeCollider2D EdgeCollider2D;
-  
-    // public void SetCreate()
-    // {
-    //     EdgeCollider2D.isTrigger = false;
-    // }
-    // private void OnTriggerEnter2D(Collider2D collision)
-    // {
-    //     Ball ball = collision.GetComponent<Ball>();
-    //     if (collision != null && ball != null)
-    //     {
-    //         Destroy(gameObject);
-    //     }
-    // }
+    private Line _currentLine;
+    public void SetCreate()
+    {
+        EdgeCollider2D.isTrigger = false;
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Ball ball = collision.GetComponent<Ball>();
+        Line line = collision.GetComponent<Line>();
+        if (collision != null && ball != null)
+        {
+            Destroy(gameObject);
+        }
+       
+       
+    }
     private void Start()
     {
         _collider.transform.position -= transform.position;
         EdgeCollider2D = this.GetComponent<EdgeCollider2D>();
-        // EdgeCollider2D.isTrigger = true;
+        EdgeCollider2D.isTrigger = true;
         
     }
 
